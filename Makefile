@@ -1,20 +1,17 @@
+
 OPENRESTY_PREFIX=/usr/local/openresty
 
-PREFIX ?=          /usr/local
-LUA_INCLUDE_DIR ?= $(PREFIX)/include
-LUA_LIB_DIR ?=     $(PREFIX)/lib/lua/$(LUA_VERSION)
+LUA_INCLUDE_DIR ?= $(OPENRESTY_PREFIX)/luajit/include/
+LUA_LIB_DIR ?=     $(OPENRESTY_PREFIX)/lualib/resty
 INSTALL ?= install
-TEST_FILE ?= t
 
 .PHONY: all test install
 
 all: ;
 
 install: all
-	$(INSTALL) -d $(DESTDIR)/$(LUA_LIB_DIR)/resty
-	$(INSTALL) lib/resty/*.lua $(DESTDIR)/$(LUA_LIB_DIR)/resty/
+	$(INSTALL) -d $(LUA_LIB_DIR)
+	$(INSTALL) lib/resty/*.lua $(LUA_LIB_DIR)
 
 test: all
-	PATH=$(OPENRESTY_PREFIX)/nginx/sbin:$$PATH TEST_NGINX_NO_SHUFFLE=1 prove -I../test-nginx/lib -r $(TEST_FILE)
-	util/lua-releng
-
+	PATH=$(OPENRESTY_PREFIX)/nginx/sbin:$$PATH prove -I../test-nginx/lib -r t
